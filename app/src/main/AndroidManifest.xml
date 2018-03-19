@@ -21,7 +21,8 @@
         <activity android:name=".main_screen" />
         <activity android:name=".PhoneNumber" />
         <activity android:name=".setpassword" />
-        <activity android:name=".SyncContacts"></activity>
+        <activity android:name=".SyncContacts" />
+        <activity android:name=".EmergencyContactSelection"></activity>
     </application>
 
 </manifest>

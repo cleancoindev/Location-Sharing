@@ -312,10 +312,14 @@ public class SyncContacts extends AppCompatActivity {
                 mDatabaseContacts.child(num1+"").child("total").setValue(i+"");
                 i++;
             }
+            progressDialog.dismiss();
+            Intent intent = new Intent(SyncContacts.this,EmergencyContactSelection.class);
+            startActivity(intent);
+            SyncContacts.this.finish();
         }
         else if(refresh_flag.equals("1"))
         {
-            Query q = mDatabaseContacts.child(nums+"");
+            Query q = mDatabaseContacts.child(Globalshare.uid+"");
             q.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -326,13 +330,18 @@ public class SyncContacts extends AppCompatActivity {
                         contact_total_int = Integer.parseInt(contact_total);
                         contact_total_int++;
                         for (Users user : refreshContact) {
-                            mDatabaseContacts.child(nums + "").child(nums + "").child(contact_total_int + "").child("name").setValue(user.getName());
-                            mDatabaseContacts.child(nums + "").child(nums + "").child(contact_total_int + "").child("mob").setValue(user.getMob());
-                            mDatabaseContacts.child(nums + "").child(nums + "").child(contact_total_int + "").child("email").setValue(user.getEmail());
-                            mDatabaseContacts.child(nums + "").child(nums + "").child(contact_total_int + "").child("no").setValue(contact_total_int + "");
-                            mDatabaseContacts.child(nums + "").child("total").setValue(contact_total_int + "");
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("name").setValue(user.getName());
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("mob").setValue(user.getMob());
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("email").setValue(user.getEmail());
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("no").setValue(contact_total_int + "");
+                            mDatabaseContacts.child(Globalshare.uid + "").child("total").setValue(contact_total_int + "");
                             contact_total_int++;
                         }
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(SyncContacts.this,EmergencyContactSelection.class);
+                        startActivity(intent);
+                        SyncContacts.this.finish();
+
                     }
                 }
 
