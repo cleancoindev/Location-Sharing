@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "44311590580-klg3mpvqvtpi677qt27bi9todkp35jrn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.classify.locationsharing",
+            "certificate_hash": "377ecfb5adf575c00cecf17157a50ca24a99169a"
+          }
+        },
+        {
           "client_id": "44311590580-j36vtg05rdt4loiotoo3hl4tsl86ss32.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
