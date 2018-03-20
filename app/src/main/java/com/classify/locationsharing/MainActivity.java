@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
                             if(flags==0) {
                                 if (firebase_name == null) {
-
                                     WriteData();
                                     flags++;
                                 } else {
@@ -144,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void WriteData()
     {
-
-
         mDatabaseUsers.child(uid+"").child("email").setValue(email);
         mDatabaseUsers.child(uid+"").child("name").setValue(name);
         mDatabaseUsers.child(uid+"").child("photourl").setValue(photourl);
@@ -160,16 +157,11 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseLocationUsers.child(uid+"").child("latitude").setValue("50");
         mDatabaseLocationUsers.child(uid+"").child("longitude").setValue("20");
 
-
-
-
-
         mDatabaseTrustedContacts.child(uid+"").child("1").child("email").setValue("Contact_1@gmail.com");
         mDatabaseTrustedContacts.child(uid+"").child("1").child("mob").setValue("9999999999");
         mDatabaseTrustedContacts.child(uid+"").child("1").child("name").setValue("Contact 1");
         mDatabaseTrustedContacts.child(uid+"").child("1").child("photourl").setValue("https://firebasestorage.googleapis.com/v0/b/talkntrace-37543.appspot.com/o/gallery%2Fcontact_icon.png?alt=media&token=42f686f3-3597-4870-a46c-889af540aa99");
         mDatabaseTrustedContacts.child(uid+"").child("1").child("no").setValue("1");
-
 
         mDatabaseTrustedContacts.child(uid+"").child("2").child("email").setValue("Contact_2@gmail.com");
         mDatabaseTrustedContacts.child(uid+"").child("2").child("mob").setValue("9999999999");
@@ -183,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseTrustedContacts.child(uid+"").child("3").child("photourl").setValue("https://firebasestorage.googleapis.com/v0/b/talkntrace-37543.appspot.com/o/gallery%2Fcontact_icon.png?alt=media&token=42f686f3-3597-4870-a46c-889af540aa99");
         mDatabaseTrustedContacts.child(uid+"").child("3").child("no").setValue("3");
 
-        Intent intent = new Intent(MainActivity.this,main_screen.class);
+        Intent intent = new Intent(MainActivity.this,PhoneNumber.class);
         intent.putExtra("total",uid);
         startActivity(intent);
         MainActivity.this.finish();
@@ -233,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
 

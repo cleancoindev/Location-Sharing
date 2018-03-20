@@ -12,7 +12,7 @@ class Users {
     public String email;
     public String photourl;
     public String mob;
-    public String no;
+    public String uid;
     public String type;
     public String groupno;
     public String status;
@@ -25,7 +25,7 @@ class Users {
         this.email = email;
         this.photourl = photourl;
         this.mob = mob;
-        this.no = no;
+        this.uid = no;
     }
 
     public Users(String name, String email, String photourl, String no, String mob) {
@@ -33,7 +33,7 @@ class Users {
         this.email = email;
         this.photourl = photourl;
         this.mob = mob;
-        this.no = no;
+        this.uid = no;
 
     }
 
@@ -57,7 +57,7 @@ class Users {
         this.name = name;
         this.email = email;
         this.mob = mob;
-        this.no = no;
+        this.uid = no;
     }
 
     public String getMsg() {
@@ -105,11 +105,11 @@ class Users {
     }
 
     public String getNo() {
-        return no;
+        return uid;
     }
 
     public void setNo(String no) {
-        this.no = no;
+        this.uid = no;
     }
 
     public String getEmail() {

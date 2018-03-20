@@ -40,12 +40,9 @@ public class SyncContacts extends AppCompatActivity {
     private ArrayList<String> tempContact = new ArrayList<>();
     private ArrayList<String> refreshContactString = new ArrayList<>();
     String Cemail;
-    String Uemail;
-    final int[] ref_flag = {0};
-    int[] temp_flag = {0};
+    String Uemail,uid;
     int[] conflag = {0};
-  //  int nums;
-    int flag=0;
+
     String refresh_flag="0";
     ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
@@ -64,8 +61,6 @@ public class SyncContacts extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 Uemail = firebaseAuth.getCurrentUser().getEmail();
-
-
             }
         };
     }
@@ -152,7 +147,6 @@ public class SyncContacts extends AppCompatActivity {
         int last = alContacts.size();
         for (Users user: alContacts)
         {
-
             getdata(user.getMob(),user.getName(),last);
             last--;
         }
@@ -193,7 +187,7 @@ public class SyncContacts extends AppCompatActivity {
                 }
                 if(last==1)
                 {
-                    if(refresh_flag.equals("1"))
+                    /*if(refresh_flag.equals("1"))
                     {
                         Query q = mDatabaseContacts.child(nums+"").child(nums+"");
                         q.addValueEventListener(new ValueEventListener() {
@@ -225,11 +219,11 @@ public class SyncContacts extends AppCompatActivity {
                             public void onCancelled(DatabaseError databaseError) {
                             }
                         });
-                    }
-                    else
-                    {
+                    }*/
+                 //   else
+                    //{
                         donesync();
-                    }
+                    //}
                 }
             }
             @Override
@@ -276,16 +270,16 @@ public class SyncContacts extends AppCompatActivity {
 
 
     private void donesync() {
+        Log.d("Enter","ghk");
         progressDialog = new ProgressDialog(this);
         progressDialog = ProgressDialog.show(this, "Please wait",
                 "Syncing your Contacts...", true);
         progressDialog.show();
-        final int[] flag = {0};
+        final int[] flag = {0};/*
         mDatabase2 = FirebaseDatabase.getInstance().getReference().child("contacts").child("no").child("1").child("no");
-        mDatabase2.keepSynced(true);
+        mDatabase2.keepSynced(true);*/
 
                 num1 = Globalshare.uid;
-
                 if(flag[0] ==0)
                 {
                     writeData();
@@ -302,7 +296,7 @@ public class SyncContacts extends AppCompatActivity {
         int i=1;
         if(refresh_flag.equals("0"))
         {
-            mDatabaseContacts.child("no").child("1").child("no").setValue(num1+"");
+            //mDatabaseContacts.child("no").child("1").child("no").setValue(num1+"");
             for(Users user: CommonContacts)
             {
                 mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("name").setValue(user.getName());
@@ -317,7 +311,7 @@ public class SyncContacts extends AppCompatActivity {
             startActivity(intent);
             SyncContacts.this.finish();
         }
-        else if(refresh_flag.equals("1"))
+        /*else if(refresh_flag.equals("1"))
         {
             Query q = mDatabaseContacts.child(Globalshare.uid+"");
             q.addValueEventListener(new ValueEventListener() {
@@ -349,11 +343,11 @@ public class SyncContacts extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-        }
-        writeDataIntoSingleChat();
+        }*/
+        //writeDataIntoSingleChat();
     }
 
-    public void writeDataIntoSingleChat()
+    /*public void writeDataIntoSingleChat()
     {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabase.keepSynced(true);
@@ -436,5 +430,5 @@ public class SyncContacts extends AppCompatActivity {
                 Toast.makeText(SyncContacts.this,"Failed to Retrieve Chat",Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 }

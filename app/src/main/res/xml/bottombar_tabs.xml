@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <tab
+        id="@+id/tab_chats"
+        icon="@drawable/ic_contacts_black_24dp"
+        title="Contacts"
+        barColorWhenSelected="@color/blue_new" />
+
+    <tab
+        id="@+id/tab_People"
+        icon="@drawable/ic_people_black_24dp"
+        title="Requests"
+        barColorWhenSelected="@color/blue_new" />
+
+</tabs>

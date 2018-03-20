@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +31,7 @@ public class setpassword extends AppCompatActivity {
     private FirebaseAuth mAuth;
     protected FirebaseAuth.AuthStateListener mAuthListener;
     String userEmail;
-    private String no;
+    private String uids;
     private String pwd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class setpassword extends AppCompatActivity {
                 else
                 {
                     userEmail = firebaseAuth.getCurrentUser().getEmail();
+                    String uidd = firebaseAuth.getCurrentUser().getUid();
+                    Log.d("hey123",uidd);
                 }
             }
         };
@@ -74,7 +77,7 @@ public class setpassword extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                no = (String) snapshot.child("no").getValue();
+                                uids = (String) snapshot.child("uid").getValue();
                                 addPassword();
                             }
 
@@ -94,8 +97,8 @@ public class setpassword extends AppCompatActivity {
 
     private void addPassword() {
 
-        mDatabaseUsers.child(no).child("password").setValue(pwd);
-        mDatabaseLocationUser.child(no).child("password").setValue(pwd);
+        mDatabaseUsers.child(uids).child("password").setValue(pwd);
+        mDatabaseLocationUser.child(uids).child("password").setValue(pwd);
         Intent intent = new Intent(setpassword.this,SyncContacts.class);
         intent.putExtra("refresh","0");
         startActivity(intent);
