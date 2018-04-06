@@ -85,8 +85,8 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
     String useremail;
     LatLng latLng1 = null ;
     LatLng latLng = null ;
-    String user_no;
-    String Seconduser;
+    /*String user_no;
+    String Seconduser;*/
     LocationRequest mLocationrequest;
     com.github.clans.fab.FloatingActionButton Normal,back;
     com.github.clans.fab.FloatingActionButton Allmarker;
@@ -126,10 +126,10 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
         Intent i = getIntent();
         al  = i.getStringArrayListExtra("userdata");
 
-        Log.d("intentpass",al.get(1));
-        Seconduser = al.get(3);
-        Log.d("secon21",Seconduser);
-        user_no = al.get(4);
+        //Log.d("intentpass",al.get(1));
+        //Seconduser = al.get(3);
+        //Log.d("secon21",Seconduser);
+        //user_no = al.get(4);
 
         if (googleServicesAvailable()) {
             setContentView(R.layout.activity_single_map);
@@ -153,9 +153,9 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
         chatting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent i = new Intent(SingleMap.this,Chats.class);
+                Intent i = new Intent(SingleMap.this,AddMember.class);
                 i.putExtra("userdata",al);
-                startActivity(i);*/
+                startActivity(i);
             }
         });
 
@@ -282,62 +282,67 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
         final String[] emailid = new String[1];
         final String[] flag = new String[1];
 
-        mRef1.child(Seconduser).addValueEventListener(new ValueEventListener() {
-            Marker m1 = null  ;
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (m1 != null  ) {
+        for(String uids : Globalshare.uid_global)
+        {
 
-                    m1.remove();
+            mRef1.child(uids).addValueEventListener(new ValueEventListener() {
+                Marker m1 = null  ;
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (m1 != null  ) {
+
+                        m1.remove();
+                    }
+                    Latitude[0] = Double.parseDouble((String) dataSnapshot.child("latitude").getValue());
+                    Longitude[0] = Double.parseDouble((String) dataSnapshot.child("longitude").getValue());
+                    name[0] = (String) dataSnapshot.child("name").getValue();
+                    email[0] = (String) dataSnapshot.child("email").getValue();
+                    Log.d("lon123",Latitude[0].toString());
+                    Log.d("lon123",Latitude[0].toString());
+
+                    latLng = new LatLng(Latitude[0], Longitude[0]);
+                    final String photourl = (String) dataSnapshot.child("photourl").getValue();
+                    URL url = null;
+                    HttpURLConnection urlConnection = null;
+                    try {
+                        url = new URL(photourl);
+                        urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.connect();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+                    try {
+                        image = BitmapFactory.decodeStream(urlConnection.getInputStream());
+                        urlConnection.disconnect();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    image = getCroppedBitmap(image);
+
+                    MarkerOptions M1 = new MarkerOptions().position(latLng).title(email[0]).icon(BitmapDescriptorFactory.fromBitmap(image)).anchor(0.5f,1);
+                    mgoogleMap.setOnMarkerClickListener(SingleMap.this);
+                    m1 = mgoogleMap.addMarker(M1);
+                    final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    if (latLng != null) {
+                        builder.include(latLng);
+                    }
+                    /*if(latLng1 != null)
+                    {
+                        builder.include(latLng1);
+                    }*/
+                    bounds = builder.build();
                 }
-                Latitude[0] = Double.parseDouble((String) dataSnapshot.child("latitude").getValue());
-                Longitude[0] = Double.parseDouble((String) dataSnapshot.child("longitude").getValue());
-                name[0] = (String) dataSnapshot.child("name").getValue();
-                email[0] = (String) dataSnapshot.child("email").getValue();
-                Log.d("lon123",Latitude[0].toString());
-                Log.d("lon123",Latitude[0].toString());
 
-                latLng = new LatLng(Latitude[0], Longitude[0]);
-                final String photourl = (String) dataSnapshot.child("photourl").getValue();
-                URL url = null;
-                HttpURLConnection urlConnection = null;
-                try {
-                    url = new URL(photourl);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.connect();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    e.printStackTrace();
                 }
-                try {
-                    image = BitmapFactory.decodeStream(urlConnection.getInputStream());
-                    urlConnection.disconnect();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                image = getCroppedBitmap(image);
-
-                MarkerOptions M1 = new MarkerOptions().position(latLng).title(email[0]).icon(BitmapDescriptorFactory.fromBitmap(image)).anchor(0.5f,1);
-                mgoogleMap.setOnMarkerClickListener(SingleMap.this);
-                m1 = mgoogleMap.addMarker(M1);
-                final LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                if (latLng != null) {
-                    builder.include(latLng);
-                }
-                if(latLng1 != null)
-                {
-                    builder.include(latLng1);
-                }
-                bounds = builder.build();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+            });
+        }
+        /*
         mRef1.child(user_no).addValueEventListener(new ValueEventListener() {
 
             final Double[] Latitude1 = new Double[1];
@@ -397,7 +402,7 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
 
@@ -439,8 +444,8 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
             Double Lat = location.getLatitude();
             Double Log = location.getLongitude();
 
-            mRef.child("LocationUser").child(user_no).child("latitude").setValue(Lat+"");
-            mRef.child("LocationUser").child(user_no).child("longitude").setValue(Log+"");
+            mRef.child("LocationUser").child(Globalshare.uid).child("latitude").setValue(Lat+"");
+            mRef.child("LocationUser").child(Globalshare.uid).child("longitude").setValue(Log+"");
             //android.util.Log.d("latndlon1", Lat+" "+Log);
 
         }
@@ -478,7 +483,7 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
 
             }
         });
-        mRef.child("LocationUser").child(user_no).addListenerForSingleValueEvent(new ValueEventListener() {
+        /*mRef.child("LocationUser").child(Globalshare.uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -494,7 +499,7 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         return true;
@@ -522,5 +527,11 @@ public class SingleMap extends AppCompatActivity implements OnMarkerClickListene
         return output;
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(SingleMap.this,main_screen.class));
+    }
 
 }

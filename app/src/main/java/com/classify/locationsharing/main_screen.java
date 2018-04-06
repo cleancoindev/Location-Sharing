@@ -1,10 +1,12 @@
 package com.classify.locationsharing;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,6 +61,7 @@ public class main_screen extends AppCompatActivity implements FragNavController.
     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
     private String Userno;
     public ImageButton menubtn;
+    DatabaseHandler db;
 
 
 
@@ -66,27 +69,19 @@ public class main_screen extends AppCompatActivity implements FragNavController.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+        db = new DatabaseHandler(this);
+
+
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
-        try{
-            firebaseDatabase.setPersistenceEnabled(true);
-        }catch (Exception e){}
-
+        Log.e("LogIt", "Running it      ");
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
 
 
         final ImageView userpic = (ImageView)findViewById(R.id.userpic);
         final TextView user = (TextView)findViewById(R.id.username);
         menubtn = (ImageButton)findViewById(R.id.menu_main);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-
-
-        mgoogleapiclient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(main_screen.this).build();
-        mgoogleapiclient.connect();
-
-
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -94,20 +89,56 @@ public class main_screen extends AppCompatActivity implements FragNavController.
                 if(firebaseAuth.getCurrentUser()==null)
                 {
                     startActivity(new Intent(main_screen.this,MainActivity.class));
+                    finishAffinity();
+                    Log.d("hey11","1234");
                 }
                 else
                 {
+                    Intent i =new Intent(getBaseContext(),ServiceTest.class);
+                    i.putExtra("uid",firebaseAuth.getCurrentUser().getUid()+"");
+                    getBaseContext().startService(i);
+
+                    String grant_permission = db.getGrant();
+                    if(grant_permission.equals("true"))
+                    {
+                        db.updateGrant("false");
+                    }
+                    else
+                    {
+                        db.updateGrant("true");
+                        Toast.makeText(main_screen.this,"Please enable the autostart for this application",Toast.LENGTH_LONG).show();
+                        String manufacture = "xiaomi";
+                        if(manufacture.equalsIgnoreCase(Build.MANUFACTURER))
+                        {
+                            Intent i1 = new Intent();
+                            i1.setComponent(new ComponentName("com.miui.securitycenter","com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                            startActivity(i1);
+                        }
+                    }
+
+
+
                     String username = firebaseAuth.getCurrentUser().getDisplayName();
                     userEmail = firebaseAuth.getCurrentUser().getEmail();
+                    Log.d("hey11",userEmail+"123");
                     Globalshare.uid = firebaseAuth.getCurrentUser().getUid();
                     Picasso.with(main_screen.this).load(firebaseAuth.getCurrentUser().getPhotoUrl()).resize(50,50).centerCrop().into(userpic);
                     user.setText(username);
                 }
             }
         };
+
+        try{
+            firebaseDatabase.setPersistenceEnabled(true);
+        }catch (Exception e){}
+
+        mgoogleapiclient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(main_screen.this).build();
+        mgoogleapiclient.connect();
+
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         mBottomBar = (BottomBar)findViewById(R.id.bottomBar);
-        mBottomBar.selectTabAtPosition(TAB_SECOND);
+        mBottomBar.selectTabAtPosition(TAB_FIRST);
 
         /*Controller to control movement of tabs*/
         mNavController = new FragNavController(savedInstanceState,getSupportFragmentManager(),R.id.container,this,5,TAB_SECOND);
@@ -115,21 +146,20 @@ public class main_screen extends AppCompatActivity implements FragNavController.
         menubtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(MainActivity.this,"1",Toast.LENGTH_SHORT).show();
-//                if(mBottomBar.getCurrentTabPosition()==TAB_FIRST)
-//                {
-//                    Intent i = new Intent(MainActivity.this,SyncContacts.class);
-//                    i.putExtra("refresh","1");
-//                    startActivity(i);
-//                    //Toast.makeText(MainActivity.this,"11",Toast.LENGTH_SHORT).show();
-//
-//                }
-//                else  if(mBottomBar.getCurrentTabPosition()==TAB_SECOND)
-//                {
-////                    Toast.makeText(MainActivity.this,"hi1",Toast.LENGTH_SHORT).show();
-//                    startActivity(new Intent(MainActivity.this,ReplaceEmergencyContacts.class));
-//                }
-//                else  if(mBottomBar.getCurrentTabPosition()==TAB_THREE)
+
+                if(mBottomBar.getCurrentTabPosition()==TAB_FIRST)
+                {
+                    Intent i = new Intent(main_screen.this,ContactToRequest.class);
+                    startActivity(i);
+
+                    //Toast.makeText(MainActivity.this,"11",Toast.LENGTH_SHORT).show();
+
+                }
+                else  if(mBottomBar.getCurrentTabPosition()==TAB_SECOND)
+                {
+                    startActivity(new Intent(main_screen.this,MultipleLocation.class));
+                }
+            //    else  if(mBottomBar.getCurrentTabPosition()==TAB_THREE)
 //                {
 //                    //Toast.makeText(MainActivity.this,"hi",Toast.LENGTH_SHORT).show();
 //
@@ -152,8 +182,8 @@ public class main_screen extends AppCompatActivity implements FragNavController.
                 {
                     case R.id.tab_chats: {
                         mNavController.switchTab(TAB_FIRST);
-//                        menubtn.setVisibility(View.VISIBLE);
-//                        menubtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
+                        menubtn.setVisibility(View.VISIBLE);
+                        menubtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_white_24dp));
                         toolbar.setBackgroundDrawable(new ColorDrawable(getResources()
                                 .getColor(R.color.blue_new)));
                         break;
@@ -169,8 +199,8 @@ public class main_screen extends AppCompatActivity implements FragNavController.
 
                     case R.id.tab_People:
                         mNavController.switchTab(TAB_SECOND);
-//                        menubtn.setVisibility(View.VISIBLE);
-//                        menubtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_refresh_white_24dp));
+                        menubtn.setVisibility(View.VISIBLE);
+                        menubtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
                         toolbar.setBackgroundDrawable(new ColorDrawable(getResources()
                                 .getColor(R.color.blue_new)));
                         break;
@@ -268,9 +298,12 @@ public class main_screen extends AppCompatActivity implements FragNavController.
         {
             Double Lat = location.getLatitude();
             Double Log = location.getLongitude();
+            if(Globalshare.uid!=null)
+            {
+                mRef.child("LocationUser").child(Globalshare.uid).child("latitude").setValue(Lat+"");
+                mRef.child("LocationUser").child(Globalshare.uid).child("longitude").setValue(Log+"");
+            }
 
-            mRef.child("LocationUser").child(Globalshare.uid).child("latitude").setValue(Lat+"");
-            mRef.child("LocationUser").child(Globalshare.uid).child("longitude").setValue(Log+"");
 
             //android.util.Log.d("latndlon1", Lat+" "+Log);
 

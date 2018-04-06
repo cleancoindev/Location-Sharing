@@ -39,7 +39,7 @@ public class SyncContacts extends AppCompatActivity {
     private ArrayList<Users> refreshContact = new ArrayList<>();
     private ArrayList<String> tempContact = new ArrayList<>();
     private ArrayList<String> refreshContactString = new ArrayList<>();
-    String Cemail;
+    String Cemail,uid_of_frds,photourl_frds;
     String Uemail,uid;
     int[] conflag = {0};
 
@@ -48,6 +48,7 @@ public class SyncContacts extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     final int[] no = new int[1];
+    int temp_flag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +168,8 @@ public class SyncContacts extends AppCompatActivity {
 
                     Value[0] = (String) postSnapshot.child("name").getValue();
                     Cemail = (String) postSnapshot.child("email").getValue();
+                    uid_of_frds = (String) postSnapshot.child("uid").getValue();
+                    photourl_frds = (String) postSnapshot.child("photourl").getValue();
 
                     if(Value[0]!=null)
                     {
@@ -180,21 +183,21 @@ public class SyncContacts extends AppCompatActivity {
                         }
                         if(flag==0)
                         {
-                            Users user = new Users(contactName,contactNumber,Cemail,"1");
+                            Users user = new Users(contactName,contactNumber,Cemail,"1",uid_of_frds,photourl_frds);
                             CommonContacts.add(user);
                         }
                     }
                 }
                 if(last==1)
                 {
-                    /*if(refresh_flag.equals("1"))
+                    if(refresh_flag.equals("1"))
                     {
-                        Query q = mDatabaseContacts.child(nums+"").child(nums+"");
+                        Query q = mDatabaseContacts.child(Globalshare.uid).child(Globalshare.uid);
                         q.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(temp_flag[0]==0) {
-                                    temp_flag[0] =1;
+                                if(temp_flag==0) {
+                                    temp_flag =1;
                                     tempContact.clear();
                                     refreshContact.clear();
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -219,11 +222,11 @@ public class SyncContacts extends AppCompatActivity {
                             public void onCancelled(DatabaseError databaseError) {
                             }
                         });
-                    }*/
-                 //   else
-                    //{
+                    }
+                    else
+                    {
                         donesync();
-                    //}
+                    }
                 }
             }
             @Override
@@ -302,16 +305,20 @@ public class SyncContacts extends AppCompatActivity {
                 mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("name").setValue(user.getName());
                 mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("mob").setValue(user.getMob());
                 mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("email").setValue(user.getEmail());
+               // mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("email").setValue(user.getEmail());
+                mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("request").setValue("not request");
+                mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("uid").setValue(user.getUid());
                 mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("no").setValue(i+"");
+                mDatabaseContacts.child(num1+"").child(num1+"").child(i+"").child("photourl").setValue(user.getPhotourl());
                 mDatabaseContacts.child(num1+"").child("total").setValue(i+"");
                 i++;
             }
             progressDialog.dismiss();
-            Intent intent = new Intent(SyncContacts.this,EmergencyContactSelection.class);
+            Intent intent = new Intent(SyncContacts.this,main_screen.class);
             startActivity(intent);
             SyncContacts.this.finish();
         }
-        /*else if(refresh_flag.equals("1"))
+        else if(refresh_flag.equals("1"))
         {
             Query q = mDatabaseContacts.child(Globalshare.uid+"");
             q.addValueEventListener(new ValueEventListener() {
@@ -328,11 +335,15 @@ public class SyncContacts extends AppCompatActivity {
                             mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("mob").setValue(user.getMob());
                             mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("email").setValue(user.getEmail());
                             mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("no").setValue(contact_total_int + "");
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("request").setValue("not request");
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("uid").setValue(user.getUid());
+                            mDatabaseContacts.child(Globalshare.uid + "").child(Globalshare.uid + "").child(contact_total_int + "").child("photourl").setValue(user.getPhotourl());
                             mDatabaseContacts.child(Globalshare.uid + "").child("total").setValue(contact_total_int + "");
                             contact_total_int++;
                         }
+
                         progressDialog.dismiss();
-                        Intent intent = new Intent(SyncContacts.this,EmergencyContactSelection.class);
+                        Intent intent = new Intent(SyncContacts.this,ContactToRequest.class);
                         startActivity(intent);
                         SyncContacts.this.finish();
 
@@ -343,13 +354,14 @@ public class SyncContacts extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-        }*/
-        //writeDataIntoSingleChat();
+        }
+        writeDataIntoSingleChat();
     }
 
-    /*public void writeDataIntoSingleChat()
+    public void writeDataIntoSingleChat()
     {
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+
+        /*DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabase.keepSynced(true);
         final int[] i = {1};
         int flag=0;
@@ -429,6 +441,6 @@ public class SyncContacts extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(SyncContacts.this,"Failed to Retrieve Chat",Toast.LENGTH_SHORT).show();
             }
-        });
-    }*/
+        });*/
+    }
 }

@@ -1,7 +1,11 @@
 package com.classify.locationsharing;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,17 +41,15 @@ public class MainActivity extends AppCompatActivity {
     int flags=0;
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Main_Activity";
+    DatabaseHandler db;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-
     String name;
     String email;
     String photourl;
     String firebase_name;
     String total;
-
     String uid;
 
     DatabaseReference mDatabaseUsers;
@@ -55,15 +57,26 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference mDatabaseContacts;
     DatabaseReference mDatabaseGroupChat;
     DatabaseReference mDatabaseTrustedContacts;
-
     ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Gbutton = (SignInButton) findViewById(R.id.SignIn);
 
+        db = new DatabaseHandler(this);
+
+        String manufacture = "xiaomi";
+        if(manufacture.equalsIgnoreCase(Build.MANUFACTURER))
+        {
+            Intent i = new Intent();
+            i.setComponent(new ComponentName("com.miui.securitycenter","com.miui.permcenter.autostart.AutoStartManagementActivity"));
+            startActivity(i);
+        }
+
+
+        Log.d("hey11","INN1");
+        Gbutton = (SignInButton) findViewById(R.id.SignIn);
 
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabaseUsers.keepSynced(true);
@@ -89,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     photourl = firebaseAuth.getCurrentUser().getPhotoUrl().toString();
                     uid = firebaseAuth.getCurrentUser().getUid();
                     Globalshare.uid = uid;
+                    db.globaladdData(Globalshare.uid,"false");
                     Query query1 = mDatabaseUsers.orderByChild("email").equalTo(email);
                     query1.addValueEventListener(new ValueEventListener() {
                         @Override

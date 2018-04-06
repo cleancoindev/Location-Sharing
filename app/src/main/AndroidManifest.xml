@@ -13,22 +13,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".main_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
-        <activity android:name=".main_screen" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".PhoneNumber" />
         <activity android:name=".setpassword" />
         <activity android:name=".SyncContacts" />
         <activity android:name=".ContactList" />
         <activity android:name=".EmergencyContactSelection" />
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCWV1agUnGpAkMo8dKaEkPJ4fGZmXAr18c" />
@@ -36,7 +34,19 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".SingleMap"></activity>
+        <activity android:name=".SingleMap" />
+        <activity android:name=".ContactToRequest" />
+        <activity android:name=".MultipleLocation" />
+        <activity android:name=".AddMember"></activity>
+        <service android:name="ServiceTest" >
+        </service>
+
+        <receiver android:name="ReceiverCall" >
+            <intent-filter>
+                <action android:name="com.android.techtrainner" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

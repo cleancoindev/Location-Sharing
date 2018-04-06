@@ -17,13 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <ImageView
-                android:id="@+id/icon"
+                android:id="@+id/backButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingRight="10dp"
-                android:src="@drawable/ic_arrow_back_white_24dp" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,21 +32,13 @@
                 android:layout_toRightOf="@+id/icon"
                 android:textAlignment="center"
                 android:gravity="center"
-                android:text="Contacts"
-                android:fontFamily="@font/montreal_bold"
+                android:text="Request Panel"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/refresh"
-                android:src="@drawable/ic_refresh_white_24dp"
-                android:layout_alignParentRight="true"
-                android:padding="17dp"/>
+                android:textSize="18dp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-<!--
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
@@ -67,7 +59,7 @@
             tools:layout_editor_absoluteX="84dp"
             tools:layout_editor_absoluteY="230dp" />
 
-    </android.support.design.widget.TextInputLayout>-->
+    </android.support.design.widget.TextInputLayout>
 
     <!--
             <EditText
@@ -80,12 +72,11 @@
     -->
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_contctlist_Emergency"
+        android:id="@+id/request_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_emergency"
-        android:padding="2dp"
-        android:background="@color/white"
+        android:layout_marginTop="50dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!--

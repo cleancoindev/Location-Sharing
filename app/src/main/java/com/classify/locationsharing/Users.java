@@ -11,14 +11,17 @@ class Users {
     public String msg;
     public String email;
     public String photourl;
+    public String key;
     public String mob;
-    public String uid;
+    public String uid; //no
+    public String uid2; //uid
     public String type;
     public String groupno;
     public String status;
+    public String request;
 
     public Users(){}
-
+/*
     public Users(String name, String msg, String email, String photourl, String mob, String no) {
         this.name = name;
         this.msg = msg;
@@ -27,15 +30,14 @@ class Users {
         this.mob = mob;
         this.uid = no;
     }
-
     public Users(String name, String email, String photourl, String no, String mob) {
         this.name = name;
         this.email = email;
         this.photourl = photourl;
         this.mob = mob;
         this.uid = no;
-
     }
+*/
 
     public String getStatus() {
         return status;
@@ -53,11 +55,22 @@ class Users {
         //  this.time = time;
     }
 
+
+
+    public Users(String name, String mob, String email, String no,String uid,String photourl) {
+        this.name = name;
+        this.email = email;
+        this.mob = mob;
+        this.uid = no;
+        this.uid2 = uid;
+        this.photourl = photourl;
+    }
     public Users(String name, String mob, String email, String no) {
         this.name = name;
         this.email = email;
         this.mob = mob;
         this.uid = no;
+
     }
 
     public String getMsg() {
@@ -112,6 +125,14 @@ class Users {
         this.uid = no;
     }
 
+    public String getUid() {
+        return uid2;
+    }
+
+    public void setUid(String uid) {
+        this.uid2 = uid;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -142,5 +163,21 @@ class Users {
 
     public void setLastmsg(String lastmsg) {
         this.lastmsg = lastmsg;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
